@@ -8,6 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationTest extends FluentTest {
   public WebDriver webDriver = new HtmlUnitDriver();
+
+  @Override
   public WebDriver getDefaultDriver() {
     return webDriver;
   }
@@ -15,5 +17,28 @@ public class IntegrationTest extends FluentTest {
   @ClassRule
   public static ServerRule server = new ServerRule();
 
-  //Tests go here
+  @Test
+  public void rootTest() {
+      goTo("http://localhost:4567/");
+      assertThat(pageSource()).contains("Square finder");
+  }
+
+
+  @Test
+  public void squareTestIsASquare() {
+      goTo("http://localhost:4567/");
+      fill("#length").with("5");
+      fill("#width").with("5");
+      submit(".btn");
+      assertThat(pageSource()).contains("Your rectangle is a square!");
+  }
+
+  @Test
+  public void squareTestIsNotASquare() {
+      goTo("http://localhost:4567/");
+      fill("#length").with("7");
+      fill("#width").with("5");
+      submit(".btn");
+      assertThat(pageSource()).contains("Your rectangle isn't a square!");
+  }
 }
